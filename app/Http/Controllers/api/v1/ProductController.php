@@ -25,7 +25,7 @@ class ProductController extends Controller
                 ->orWhere('sku', 'like', '%' . $request->search . '%');
         }
 
-        $products = $query->paginate(10);
+        $products = $query->paginate(50);
 
         return response()->json([
             'data' => ProductResource::collection($products),
@@ -64,14 +64,6 @@ class ProductController extends Controller
         return ProductComboResource::collection($product->combos);
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -158,32 +150,122 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
-    }
+        // Busque o produto pelo ID
+        $product = Product::findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        // Retorne o produto usando o ProductResource
+        return new ProductResource($product);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Validação dos dados recebidos
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'sku' => 'required|string|max:255|unique:products,sku,' . $id,
+            'price' => 'required|numeric',
+            'cost_price' => 'nullable|numeric',
+            'stock_quantity' => 'required|integer',
+            'min_stock' => 'nullable|integer',
+            'image_path' => 'nullable|url',
+            'ncm_code' => 'nullable|string|max:255',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'expiration_date' => 'nullable|date',
+            'enable_variations' => 'nullable|boolean',
+            'variations' => 'nullable|array',
+            'variations.*.name' => 'nullable|string|max:255',
+            'variations.*.sku' => 'required|string|max:255',
+            'variations.*.price' => 'nullable|numeric',
+            'variations.*.stock_quantity' => 'required|integer',
+            'variations.*.is_active' => 'required|boolean',
+            'promotion_ids' => 'nullable|array',
+            'promotion_ids.*' => 'exists:promotions,id',
+            'combo_ids' => 'nullable|array',
+            'combo_ids.*' => 'exists:combos,id',
+        ]);
+
+        // Buscar o produto a ser atualizado
+        $product = Product::findOrFail($id);
+
+        // Atualizar o produto
+        $product->update([
+            'name' => $request->name,
+            'sku' => $request->sku,
+            'barcode' => $request->barcode,
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+            'price' => $request->price,
+            'cost_price' => $request->cost_price,
+            'stock_quantity' => $request->stock_quantity,
+            'min_stock' => $request->min_stock,
+            'is_active' => $request->is_active ?? 1,
+            'is_managed' => $request->is_managed ?? 0,
+            'image_path' => $request->image_path,
+            'ncm_code' => $request->ncm_code,
+            'supplier_id' => $request->supplier_id,
+            'expiration_date' => $request->expiration_date,
+        ]);
+
+        // Atualizar promoções associadas ao produto
+        if ($request->has('product_id')) {
+            $product->promotions()->sync($request->promotion_ids);
+        }
+
+        // Atualizar combos associados ao produto
+        if ($request->has('product_id')) {
+            $product->combos()->sync($request->combo_ids);
+        }
+
+        // Atualizar variações, se ativadas
+        if ($request->enable_variations && $request->has('variations')) {
+            foreach ($request->variations as $variation) {
+                $product->variations()->updateOrCreate(
+                    ['sku' => $variation['sku']], // Identificar a variação pela SKU
+                    [
+                        'name' => $variation['name'],
+                        'price' => $variation['price'],
+                        'stock_quantity' => $variation['stock_quantity'],
+                        'is_active' => $variation['is_active'] ?? true,
+                    ]
+                );
+            }
+        }
+
+        // Resposta de sucesso
+        return response()->json([
+            'message' => 'Produto atualizado com sucesso!',
+            'product' => $product,
+        ], 200);
     }
+
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        // Verifica se o produto existe
+        $product = Product::find($id);
+
+        // Se não encontrar o produto
+        if (!$product) {
+            return response()->json([
+                'message' => 'Produto não encontrado.',
+            ], 404);
+        }
+
+        // Deleta o produto
+        $product->delete();
+
+        return response()->json([
+            'message' => 'Produto excluído com sucesso.',
+        ], 200);
     }
+
 }
