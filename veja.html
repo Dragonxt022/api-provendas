@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <style>
+        /* Estilo da Modal Lateral */
+        .side-modal {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100%;
+            background: #f8f9fa;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.032);
+            overflow-y: auto;
+            transition: all 0.3s ease-in-out;
+            z-index: 1050;
+        }
+
+        .side-modal.active {
+            right: 0;
+        }
+
+        .side-modal .modal-header {
+            padding: 1rem;
+            background: #007bff;
+            color: white;
+        }
+
+        .side-modal .modal-body {
+            padding: 1rem;
+        }
+
+        .side-modal .close {
+            color: white;
+        }
+        /* Loader Container */
+        #loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+        }
+
+        /* Loader Animation */
+        #loader .spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loader.active {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+
+    <div class="container mt-4">
+        <h1 class="mb-4">Lista de Produtos</h1>
+
+        <!-- Campo de busca -->
+        <div class="form-group">
+            <input
+                type="text"
+                id="search-input"
+                class="form-control"
+                placeholder="Digite para buscar produtos (nome ou SKU)..."
+            />
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>SKU</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Ação</th>
+
+                </tr>
+            </thead>
+            <tbody id="product-table">
+                <!-- Loader -->
+                <div id="loader">
+                    <div class="spinner"></div>
+                </div>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination" id="pagination-links">
+                <!-- Links de paginação serão inseridos aqui -->
+            </ul>
+        </nav>
+    </div>
+    <!-- Modal Lateral -->
+    <div class="side-modal" id="side-modal">
+        <div class="modal-header">
+            <h5 id="modal-title">Detalhes do Produto</h5>
+            <button type="button" class="close" id="close-modal">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <!-- Informações sobre o produto aparecerão aqui -->
+        </div>
+    </div>
+
+    <script>
+        const loader = document.getElementById('loader');
+
+        // Mostrar o loader
+        function showLoader() {
+            loader.classList.add('active');
+        }
+
+        // Ocultar o loader
+        function hideLoader() {
+            loader.classList.remove('active');
+        }
+
+        const apiUrl = 'http://api-provendas.test/api/v1/products';
+        let currentPageUrl = apiUrl;
+
+        // Função para buscar produtos e atualizar a tabela
+        async function fetchProducts(url, query = '') {
+
+            try {
+                // Adiciona o parâmetro de busca, se presente
+                const fetchUrl = query ? `${url}?search=${query}` : url;
+                const response = await fetch(fetchUrl);
+                const data = await response.json();
+
+                // Atualiza a tabela de produtos
+                const productTable = document.getElementById('product-table');
+                productTable.innerHTML = '';
+                data.data.forEach(product => {
+                    const row = `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.sku}</td>
+                            <td>R$ ${product.price}</td>
+                            <td>${product.stock_quantity}</td>
+                            <td>
+                                <button
+                                    class="btn btn-warning btn-sm btn-view"
+                                    data-id="${product.id}"
+                                    data-name="${product.name}"
+                                    data-sku="${product.sku}"
+                                    data-price="${product.price}"
+                                    data-stock="${product.stock_quantity}">
+                                    Detalhes
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    productTable.insertAdjacentHTML('beforeend', row);
+                });
+
+                // Adiciona o evento de clique aos botões de detalhes
+                document.querySelectorAll('.btn-view').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const id = button.getAttribute('data-id');
+                        const name = button.getAttribute('data-name');
+                        const sku = button.getAttribute('data-sku');
+                        const price = button.getAttribute('data-price');
+                        const stock = button.getAttribute('data-stock');
+
+                        // Atualiza o conteúdo da modal
+                        const modalBody = document.getElementById('modal-body');
+                        modalBody.innerHTML = `
+                            <p><strong>ID:</strong> ${id}</p>
+                            <p><strong>Nome:</strong> ${name}</p>
+                            <p><strong>SKU:</strong> ${sku}</p>
+                            <p><strong>Preço:</strong> R$ ${price}</p>
+                            <p><strong>Estoque:</strong> ${stock}</p>
+                        `;
+
+                        // Abre a modal
+                        const modal = document.getElementById('side-modal');
+                        modal.classList.add('active');
+                    });
+                });
+
+                // Atualiza os links de paginação
+                const paginationLinks = document.getElementById('pagination-links');
+                paginationLinks.innerHTML = '';
+
+                if (data.links.prev) {
+                    paginationLinks.insertAdjacentHTML(
+                        'beforeend',
+                        `<li class="page-item"><a class="page-link" href="${data.links.prev}">Anterior</a></li>`
+                    );
+                }
+
+                if (data.links.next) {
+                    paginationLinks.insertAdjacentHTML(
+                        'beforeend',
+                        `<li class="page-item"><a class="page-link" href="${data.links.next}">Próximo</a></li>`
+                    );
+                }
+
+                // Adiciona evento aos links de paginação
+                document.querySelectorAll('.page-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentPageUrl = link.getAttribute('href');
+                        fetchProducts(currentPageUrl, query);
+                    });
+                });
+            } catch (error) {
+                console.error('Erro ao buscar produtos:', error);
+            }
+        }
+
+        // Função para capturar a busca
+        function handleSearch() {
+            const searchInput = document.getElementById('search-input');
+            let searchQuery = '';
+
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim();
+                currentPageUrl = apiUrl; // Redefine para a primeira página
+                fetchProducts(currentPageUrl, searchQuery);
+            });
+        }
+
+        // Fecha a modal ao clicar no botão de fechar
+        document.getElementById('close-modal').addEventListener('click', () => {
+            const modal = document.getElementById('side-modal');
+            modal.classList.remove('active');
+        });
+
+        // Inicializar
+        fetchProducts(currentPageUrl);
+        handleSearch();
+
+
+
+    </script>
+</body>
+</html>
