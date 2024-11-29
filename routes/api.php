@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\v1\EmpresaController;
 use App\Http\Controllers\api\v1\ProductController;
 use App\Http\Controllers\api\v1\UserController;
 use Illuminate\Http\Request;
@@ -14,6 +15,10 @@ Route::prefix('v1')->group(function () {
 
     // Usuarios
     Route::get('/users', [UserController::class, 'index']);
+
+    // Empresa
+    Route::get('/empresas', [EmpresaController::class, 'index']);
+
 
     // Produtos
     Route::get('/products', [ProductController::class, 'index']);

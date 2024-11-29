@@ -49,4 +49,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Relacionamento: O usuário pode ter uma empresa
+     */
+    public function empresa()
+    {
+        return $this->hasOne(Empresa::class, 'owner_id');
+
+    }
 }

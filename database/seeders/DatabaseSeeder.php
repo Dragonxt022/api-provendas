@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Categorie;
+use App\Models\Empresa;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
@@ -42,5 +43,7 @@ class DatabaseSeeder extends Seeder
 
         // Gerar promoções
         Product_promotion::factory(30)->create();
+
+        Empresa::factory(5)->create();
     }
 }
