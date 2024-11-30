@@ -1,27 +1,29 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\v1;
 
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductVariationResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
      */
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'product_id' => $this->product_id,
-            'name' => $this->name,
-            'sku' => $this->sku,
-            'price' => number_format($this->price, 2, ',', '.'),
-            'stock_quantity' => $this->stock_quantity,
-            'is_active' => $this->is_active,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'full_name' => ($this->first_name ?? '') . ' ' . ($this->last_name ?? ''),
+            'phone' => $this->phone,
+            'username' => $this->username,
+            'email' => $this->email,
+            'status' => $this->is_active ? 'Ativo' : 'Inativo',
             'created_at_date' => Carbon::parse($this->created_at)->toDateString(), // Apenas a data
             'created_at_time' => Carbon::parse($this->created_at)->toTimeString(), // Apenas a hora
             'updated_at_date' => Carbon::parse($this->updated_at)->toDateString(),

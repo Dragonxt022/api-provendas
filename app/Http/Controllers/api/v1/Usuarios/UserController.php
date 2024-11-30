@@ -1,20 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\api\v1;
+namespace App\Http\Controllers\api\v1\Usuarios;
 
 use App\Http\Controllers\Controller;
-use App\Models\Invoice;
+use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class InvoiceController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Invoice::all();
+        // Obtém todos os usuários
+        $users = User::all();
+
+        // Retorna a coleção de usuários formatada com o recurso
+        return UserResource::collection($users);
     }
 
     /**

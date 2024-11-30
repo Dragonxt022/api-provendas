@@ -1,22 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\api\v1;
+namespace App\Http\Controllers\api\v1\Fornecedores;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\EmpresaResource;
-use App\Models\Empresa;
 use Illuminate\Http\Request;
 
-class EmpresaController extends Controller
+class SupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // Recupera todas as empresas e usa o recurso para formatar a resposta
-        $empresas = Empresa::all();
-        return EmpresaResource::collection($empresas);
+        //
     }
 
     /**

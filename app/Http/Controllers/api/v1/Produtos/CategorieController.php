@@ -1,24 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\api\v1;
+namespace App\Http\Controllers\api\v1\Produtos;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Models\Categorie;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class CategorieController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // Obtém todos os usuários
-        $users = User::all();
-
-        // Retorna a coleção de usuários formatada com o recurso
-        return UserResource::collection($users);
+        return Categorie::all();
     }
 
     /**

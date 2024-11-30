@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ProductComboResource;
-use App\Http\Resources\ProductPromotionResource;
-use App\Http\Resources\ProductResource;
-use App\Http\Resources\ProductVariationResource;
+use App\Http\Resources\v1\ProductComboResource;
+use App\Http\Resources\v1\ProductPromotionResource;
+use App\Http\Resources\v1\ProductResource;
+use App\Http\Resources\v1\ProductVariationResource;
 use App\Models\Product;
 use App\Models\Product_variation;
 use Illuminate\Http\Request;

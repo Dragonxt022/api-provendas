@@ -1,19 +1,10 @@
 <?php
 
-use App\Http\Controllers\api\v1\EmpresaController;
-use App\Http\Controllers\api\v1\ProductController;
-use App\Http\Controllers\api\v1\UserController;
-use App\Http\Controllers\api\v1\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\api\v1\Auth\AuthController;
+use App\Http\Controllers\api\v1\Empresa\EmpresaController;
+use App\Http\Controllers\api\v1\Produtos\ProductController;
+use App\Http\Controllers\api\v1\Usuarios\UserController;
 use Illuminate\Support\Facades\Route;
-
-// Sistema de login
-
-
-
-// Route::post('/register', [AuthController::class, 'register']);
-
-// Route::middleware(['auth:sanctum'])->post('/logout', [AuthController::class, 'logout']);
 
 // Grupo de Rotas da api v1
 Route::prefix('v1')->group(function () {

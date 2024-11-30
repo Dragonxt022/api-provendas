@@ -23,8 +23,6 @@ class DatabaseSeeder extends Seeder
         // Criar usuários fictícios
         User::factory(20)->create();
 
-        // Criar faturas fictícias
-        // Invoice::factory(20)->create();
 
         // Criar categorias, fornecedores e produtos
         Categorie::factory(20)->create();
