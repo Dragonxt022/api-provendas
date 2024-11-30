@@ -21,9 +21,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 255);
             $table->enum('role', ['admin', 'gerente', 'usuario'])->default('usuario'); // Define os papéis
+            $table->boolean('is_active')->default(true); // Status do usuário
             $table->rememberToken();
             $table->timestamps();
         });
+
 
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

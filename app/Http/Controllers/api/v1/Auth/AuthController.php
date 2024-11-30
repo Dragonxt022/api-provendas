@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1\Auth;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\v1\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -90,8 +91,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Retorna os dados do usuário autenticado
-        return response()->json($request->user());
+        // Retorna os dados do usuário autenticado formatados com o recurso
+        return new UserResource($request->user());
     }
 
 
