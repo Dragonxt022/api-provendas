@@ -21,11 +21,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Criar usuários fictícios
-        User::factory(20)->create();
-
+        User::factory(1)->create();
 
         // Criar categorias, fornecedores e produtos
-        Categorie::factory(20)->create();
+        Categorie::factory(10)->create();
         Supplier::factory(5)->create();
 
         // Criar produtos e suas variações
@@ -42,6 +41,7 @@ class DatabaseSeeder extends Seeder
         // Gerar promoções
         // Product_promotion::factory(30)->create();
 
-        Empresa::factory(1)->create();
+        Empresa::factory()->create();
     }
+
 }
