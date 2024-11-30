@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\api\v1\Auth\AuthController;
 use App\Http\Controllers\api\v1\Empresa\EmpresaController;
-use App\Http\Controllers\api\v1\Produtos\ProductController;
+use App\Http\Controllers\api\v1\ProductController;
 use App\Http\Controllers\api\v1\Usuarios\UserController;
 use Illuminate\Support\Facades\Route;
 
