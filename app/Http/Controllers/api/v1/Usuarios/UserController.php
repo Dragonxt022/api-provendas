@@ -13,13 +13,14 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        // Obtém todos os usuários
-        $users = User::all();
+{
+    // Obtém apenas os usuários associados à mesma empresa do usuário autenticado
+    $users = User::where('empresa_id', auth()->user()->empresa_id)->get();
 
-        // Retorna a coleção de usuários formatada com o recurso
-        return UserResource::collection($users);
-    }
+    // Retorna a coleção de usuários formatada com o recurso
+    return UserResource::collection($users);
+}
+
 
     /**
      * Show the form for creating a new resource.

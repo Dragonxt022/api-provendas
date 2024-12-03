@@ -21,19 +21,20 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Criar usuários fictícios
-        User::factory(1)->create();
+        // User::factory(1)->create();
+        // Empresa::factory()->create();
 
         // Criar categorias, fornecedores e produtos
-        Categorie::factory(10)->create();
-        Supplier::factory(5)->create();
+        // Categorie::factory(10)->create();
+        // Supplier::factory(5)->create();
 
         // Criar produtos e suas variações
-        Product::factory(10)
-            ->create()
-            ->each(function ($product) {
-                // Criar 3 variações para cada produto
-                Product_variation::factory(3)->create(['product_id' => $product->id]);
-            });
+        // Product::factory(10)
+        //     ->create()
+        //     ->each(function ($product) {
+        //         // Criar 3 variações para cada produto
+        //         Product_variation::factory(3)->create(['product_id' => $product->id]);
+        //     });
 
         // Gerar combos
         // Product_combo::factory(30)->create();
@@ -41,7 +42,7 @@ class DatabaseSeeder extends Seeder
         // Gerar promoções
         // Product_promotion::factory(30)->create();
 
-        Empresa::factory()->create();
+
     }
 
 }

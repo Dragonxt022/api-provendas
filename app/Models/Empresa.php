@@ -27,6 +27,10 @@ class Empresa extends Model
         'status',
     ];
 
+    protected $casts = [
+        'social_media' => 'array', // Aqui garantimos que seja tratado como um array JSON
+    ];
+
     /**
      * Relacionamento: Empresa pode ter muitos usuários
      */
@@ -40,7 +44,7 @@ class Empresa extends Model
      */
     public function categories()
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Categorie::class);
     }
 
     /**

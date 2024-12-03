@@ -30,7 +30,7 @@ class Product_variationFactory extends Factory
             'sku' => $this->faker->unique()->bothify('VAR-####'), // SKU único da variação
             'price' => $this->faker->randomFloat(2, 10, 100), // Preço entre 10 e 100
             'stock_quantity' => $this->faker->numberBetween(0, 50), // Estoque entre 0 e 50
-            'is_active' => $this->faker->boolean(90), // 90% de chance de estar ativo
+            'is_active' => $this->faker->boolean(95), // 90% de chance de estar ativo
         ];
     }
 }

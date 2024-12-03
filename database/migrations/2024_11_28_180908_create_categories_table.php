@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image_path')->nullable();
 
-            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
+            $table->foreignId('empresa_id')->constrained('empresas');
 
             $table->boolean('is_active')->default(true); // Indica se a categoria está ativa
             $table->timestamps();

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Scopes;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -8,13 +8,9 @@ use Illuminate\Database\Eloquent\Scope;
 
 class FilterByCompanyScope implements Scope
 {
-    /**
-     * Aplica o filtro de empresa em uma consulta de modelo.
-     */
     public function apply(Builder $builder, Model $model)
     {
-        if (auth()->check()) {
-            $builder->where('empresa_id', auth()->user()->empresa_id);
-        }
+        // Defina a lógica de escopo aqui, por exemplo, filtrar por empresa
+        $builder->where('empresa_id', auth()->user()->empresa_id);
     }
 }

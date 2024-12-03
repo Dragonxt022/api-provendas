@@ -41,7 +41,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // Método de Registro
     public function register(Request $request)
     {
         // Validação dos dados
@@ -66,6 +65,8 @@ class AuthController extends Controller
             'empresa_operating_since' => 'nullable|date',
         ]);
 
+
+        // Log para ver se a empresa foi criada corretamente
         // Criação da empresa
         $empresa = Empresa::create([
             'name' => $validated['empresa_name'],
@@ -76,14 +77,19 @@ class AuthController extends Controller
             'city' => $validated['empresa_city'],
             'state' => $validated['empresa_state'],
             'zip_code' => $validated['empresa_zip_code'],
-            'website' => $validated['empresa_website'],
-            'social_media' => $validated['empresa_social_media'] ? json_decode($validated['empresa_social_media']) : null,
-            'logo' => $validated['empresa_logo'],
-            'fiscal_status' => $validated['empresa_fiscal_status'] ?? 'Ativa',
+            'website' => isset($validated['empresa_website']) ? $validated['empresa_website'] : null,
+            'social_media' => isset($validated['empresa_social_media']) ? json_decode($validated['empresa_social_media']) : null,
+            'logo' => isset($validated['empresa_logo']) ? $validated['empresa_logo'] : null,
+            'fiscal_status' => isset($validated['empresa_fiscal_status']) ? $validated['empresa_fiscal_status'] : 'Ativa',
             'company_type' => $validated['empresa_company_type'],
-            'operating_since' => $validated['empresa_operating_since'],
+            'operating_since' => isset($validated['empresa_operating_since']) ? $validated['empresa_operating_since'] : null,
             'status' => true,
         ]);
+
+        // Verificar se a empresa foi criada
+        if (!$empresa) {
+            return response()->json(['message' => 'Failed to create company'], 500);
+        }
 
         // Criação do usuário
         $user = User::create([
@@ -92,10 +98,16 @@ class AuthController extends Controller
             'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
-            'empresa_id' => $empresa->id, // Associando o usuário à empresa criada
-            'role' => 'usuario', // Ou outro valor conforme necessário
-            'is_active' => true,
+            'empresa_id' => $empresa->id,
+            'role' => 'usuario',
+            'is_active' => isset($validated['is_active']) ? $validated['is_active'] : true,
+            'phone' => isset($validated['phone']) ? $validated['phone'] : null,
         ]);
+
+        // Verificar se o usuário foi criado
+        if (!$user) {
+            return response()->json(['message' => 'Failed to create user'], 500);
+        }
 
         // Gerando o token de autenticação
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -113,6 +125,7 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
         ], 201);
     }
+
 
     // Método de Logout
     public function logout(Request $request)

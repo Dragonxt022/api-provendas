@@ -17,9 +17,12 @@ class User extends Authenticatable
         'phone',
         'username',
         'email',
+        'password',
         'empresa_id',
         'status',
-        'password',
+        'role',
+        'is_active',
+
     ];
 
     protected $hidden = [
@@ -42,7 +45,8 @@ class User extends Authenticatable
     // Aplica o escopo global
     protected static function booted()
     {
-        static::addGlobalScope(new FilterByCompanyScope);
+        // static::addGlobalScope(new FilterByCompanyScope);
+
     }
 
     public function empresa()

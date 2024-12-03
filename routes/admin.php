@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\v1\Auth\AuthController;
 use App\Http\Controllers\api\v1\Empresa\EmpresaController;
+use App\Http\Controllers\api\v1\Fornecedores\SupplierController;
 use App\Http\Controllers\api\v1\Produtos\ProductController;
 use App\Http\Controllers\api\v1\Usuarios\UserController;
 use Illuminate\Support\Facades\Route;
@@ -41,3 +42,11 @@ Route::prefix('v1/products')->group(function () {
 });
 
 
+// Rotas para produtos
+Route::prefix('v1/suppliers')->group(function () {
+    Route::get('/', [SupplierController::class, 'index']);
+    Route::get('/{id}', [SupplierController::class, 'show']);
+    Route::post('/', [SupplierController::class, 'store']);
+    Route::put('/{id}', [SupplierController::class, 'update']);
+    Route::delete('/{id}', [SupplierController::class, 'destroy']);
+});

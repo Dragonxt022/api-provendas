@@ -18,6 +18,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        // $products = Product::withoutGlobalScope(FilterByCompanyScope::class)->get();
         $query = Product::with(['promotions', 'variations', 'combos']);
 
         if ($request->has('search')) {
@@ -112,6 +113,7 @@ class ProductController extends Controller
             'ncm_code' => $request->ncm_code,
             'supplier_id' => $request->supplier_id,
             'expiration_date' => $request->expiration_date,
+            'empresa_id' => auth()->user()->empresa_id,
         ]);
 
         // Associar promoções ao produto
@@ -144,8 +146,6 @@ class ProductController extends Controller
             'product' => $product,
         ], 201);
     }
-
-
 
     /**
      * Display the specified resource.
@@ -209,6 +209,7 @@ class ProductController extends Controller
             'ncm_code' => $request->ncm_code,
             'supplier_id' => $request->supplier_id,
             'expiration_date' => $request->expiration_date,
+            'empresa_id' => auth()->user()->empresa_id,
         ]);
 
         // Atualizar promoções associadas ao produto
@@ -250,13 +251,15 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        // Verifica se o produto existe
-        $product = Product::find($id);
+        // Verifica se o produto existe e pertence à empresa do usuário autenticado
+        $product = Product::where('id', $id)
+            ->where('empresa_id', auth()->user()->empresa_id)
+            ->first();
 
-        // Se não encontrar o produto
+        // Se não encontrar o produto ou ele não pertencer à empresa
         if (!$product) {
             return response()->json([
-                'message' => 'Produto não encontrado.',
+                'message' => 'Produto não encontrado ou você não tem permissão para excluí-lo.',
             ], 404);
         }
 
@@ -267,5 +270,6 @@ class ProductController extends Controller
             'message' => 'Produto excluído com sucesso.',
         ], 200);
     }
+
 
 }

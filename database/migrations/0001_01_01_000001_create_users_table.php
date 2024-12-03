@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 255);
 
-            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
+            $table->foreignId('empresa_id')->constrained('empresas');
 
             $table->enum('role', ['admin', 'gerente', 'usuario'])->default('usuario'); // Define os papéis
             $table->boolean('is_active')->default(true); // Status do usuário
