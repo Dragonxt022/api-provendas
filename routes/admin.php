@@ -35,10 +35,6 @@ Route::prefix('v1/products')->group(function () {
     Route::put('/{id}', [ProductController::class, 'update']); // Atualizar um produto
     Route::delete('/{id}', [ProductController::class, 'destroy']); // Excluir um produto
 
-    // Rotas específicas relacionadas a produtos
-    Route::get('/{product}/promotions', [ProductController::class, 'promotions']); // Obter promoções de um produto
-    Route::get('/{product}/variations', [ProductController::class, 'variations']); // Obter variações de um produto
-    Route::get('/{product}/combos', [ProductController::class, 'combos']); // Obter combos de um produto
 });
 
 
