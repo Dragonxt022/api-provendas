@@ -80,7 +80,6 @@ class AuthController extends Controller
             'social_media' => $validated['empresa_social_media'] ? json_decode($validated['empresa_social_media']) : null,
             'logo' => $validated['empresa_logo'],
             'fiscal_status' => $validated['empresa_fiscal_status'] ?? 'Ativa',
-            'owner_id' => null, // O owner_id será associado depois ao usuário
             'company_type' => $validated['empresa_company_type'],
             'operating_since' => $validated['empresa_operating_since'],
             'status' => true,
@@ -98,9 +97,6 @@ class AuthController extends Controller
             'is_active' => true,
         ]);
 
-        // Atualizando o owner_id da empresa para o usuário criado
-        $empresa->update(['owner_id' => $user->id]);
-
         // Gerando o token de autenticação
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -112,7 +108,6 @@ class AuthController extends Controller
                 'last_name' => $user->last_name,
                 'username' => $user->username,
                 'email' => $user->email,
-                'empresa_id' => $user->empresa_id, // Incluindo a empresa associada
             ],
             'access_token' => $token,
             'token_type' => 'Bearer',

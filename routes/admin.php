@@ -7,30 +7,37 @@ use App\Http\Controllers\api\v1\Usuarios\UserController;
 use Illuminate\Support\Facades\Route;
 
 
-// Rotas administrativas
+// Rotas administrativas ##
+// Rotas para autenticação e usuários
+Route::prefix('v1')->group(function () {
+    // Autenticação
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [AuthController::class, 'perfil']);
 
-// Usuario
-Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/profile', [AuthController::class, 'perfil']);
-Route::get('/users', [UserController::class, 'index']);
+    // Usuários
+    Route::get('/users', [UserController::class, 'index']);
+});
 
-// Empresa
-Route::get('/empresas', [EmpresaController::class, 'index']);
+// Rotas para empresas
+Route::prefix('v1/empresas')->group(function () {
+    Route::get('/', [EmpresaController::class, 'index']); // Listar todas as empresas
+    Route::post('/', [EmpresaController::class, 'store']); // Criar uma nova empresa
+    Route::put('/{id}', [EmpresaController::class, 'update']); // Atualizar uma empresa
+    Route::delete('/{id}', [EmpresaController::class, 'destroy']); // Excluir uma empresa
+});
 
-// Produtos
-// Route::apiResource('/products', ProductController::class);
+// Rotas para produtos
+Route::prefix('v1/products')->group(function () {
+    Route::get('/', [ProductController::class, 'index']); // Listar todos os produtos
+    Route::get('/{id}', [ProductController::class, 'show']); // Exibir detalhes de um produto
+    Route::post('/', [ProductController::class, 'store']); // Criar um produto
+    Route::put('/{id}', [ProductController::class, 'update']); // Atualizar um produto
+    Route::delete('/{id}', [ProductController::class, 'destroy']); // Excluir um produto
 
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/{id}', [ProductController::class, 'show']);
-
-Route::post('/cadastrar-produto', [ProductController::class, 'store']);
-Route::put('/update-produto/{id}', [ProductController::class, 'update']);
-Route::delete('/delete-produto/{id}', [ProductController::class, 'destroy']);
-
-
-// Buscas produtos
-Route::get('products/{product}/promotions', [ProductController::class, 'promotions']);
-Route::get('products/{product}/variations', [ProductController::class, 'variations']);
-Route::get('products/{product}/combos', [ProductController::class, 'combos']);
+    // Rotas específicas relacionadas a produtos
+    Route::get('/{product}/promotions', [ProductController::class, 'promotions']); // Obter promoções de um produto
+    Route::get('/{product}/variations', [ProductController::class, 'variations']); // Obter variações de um produto
+    Route::get('/{product}/combos', [ProductController::class, 'combos']); // Obter combos de um produto
+});
 
 

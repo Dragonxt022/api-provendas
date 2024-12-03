@@ -22,6 +22,12 @@ class Supplier extends Model
         'is_active',
     ];
 
+    // Aplica o escopo global
+    protected static function booted()
+    {
+        static::addGlobalScope(new FilterByCompanyScope);
+    }
+
     // Relacionamento com produtos
     public function products()
     {

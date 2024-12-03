@@ -29,6 +29,13 @@ class Product extends Model
         'expiration_date',
     ];
 
+    // Método booted() para aplicar o escopo global
+    // Aplica o escopo global
+    protected static function booted()
+    {
+        static::addGlobalScope(new FilterByCompanyScope);
+    }
+
     public function empresa()
     {
         return $this->belongsTo(Empresa::class);

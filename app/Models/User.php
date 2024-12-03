@@ -38,6 +38,13 @@ class User extends Authenticatable
     /**
      * Relacionamento: Usuário pertence a uma empresa
      */
+
+    // Aplica o escopo global
+    protected static function booted()
+    {
+        static::addGlobalScope(new FilterByCompanyScope);
+    }
+
     public function empresa()
     {
         return $this->belongsTo(Empresa::class);

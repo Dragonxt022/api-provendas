@@ -22,7 +22,6 @@ class Empresa extends Model
         'social_media',
         'logo',
         'fiscal_status',
-        'owner_id',
         'company_type',
         'operating_since',
         'status',

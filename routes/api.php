@@ -10,11 +10,13 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register']);
 
-    // Requer autenticação
-    Route::middleware('auth:sanctum')->group(function () {
-    // rots administrativas
-        require __DIR__.'/admin.php';
-
-    });
-
 });
+
+
+
+// Requer autenticação
+Route::middleware(['auth:sanctum', 'filter.by.company'])->group(function () {    // rots administrativas
+
+    require __DIR__.'/admin.php';
+
+ });

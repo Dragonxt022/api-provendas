@@ -25,7 +25,6 @@ return new class extends Migration
             $table->json('social_media')->nullable();
             $table->string('logo')->nullable();
             $table->string('fiscal_status')->default('Ativa');
-            $table->foreignId('owner_id')->constrained('users');
             $table->enum('company_type', ['MEI', 'LTDA', 'EIRELI', 'SA', 'Outros']);
             $table->date('operating_since')->nullable();
             $table->boolean('status')->default(true);
