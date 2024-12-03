@@ -9,7 +9,6 @@ class Empresa extends Model
 {
     use HasFactory;
 
-    // Define quais campos podem ser preenchidos em massa
     protected $fillable = [
         'name',
         'cnpj',
@@ -26,24 +25,38 @@ class Empresa extends Model
         'owner_id',
         'company_type',
         'operating_since',
-        'status'
+        'status',
     ];
 
-    // Relacionamento com o modelo User (dono da empresa)
-    public function owner()
+    /**
+     * Relacionamento: Empresa pode ter muitos usuários
+     */
+    public function users()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->hasMany(User::class);
     }
 
-    // Opcional: Se você quiser acessar os dados de redes sociais como array, pode usar a mutator para decodificar o JSON
-    public function getSocialMediaAttribute($value)
+    /**
+     * Relacionamento: Empresa pode ter muitas categorias
+     */
+    public function categories()
     {
-        return json_decode($value, true);
+        return $this->hasMany(Category::class);
     }
 
-    // Opcional: Se você quiser salvar os dados de redes sociais como JSON automaticamente
-    public function setSocialMediaAttribute($value)
+    /**
+     * Relacionamento: Empresa pode ter muitos fornecedores
+     */
+    public function suppliers()
     {
-        $this->attributes['social_media'] = json_encode($value);
+        return $this->hasMany(Supplier::class);
+    }
+
+    /**
+     * Relacionamento: Empresa pode ter muitos produtos
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

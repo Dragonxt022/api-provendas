@@ -18,6 +18,7 @@ class Supplier extends Model
         'email',
         'address',
         'image_path',
+        'empresa_id',
         'is_active',
     ];
 
@@ -25,5 +26,10 @@ class Supplier extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class);
     }
 }

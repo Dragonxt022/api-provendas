@@ -23,6 +23,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'username' => $this->username,
             'email' => $this->email,
+            'empresa_id'=> $this->empresa_id,
             'status' => $this->is_active ? 'Ativo' : 'Inativo',
             'created_at_date' => Carbon::parse($this->created_at)->toDateString(), // Apenas a data
             'created_at_time' => Carbon::parse($this->created_at)->toTimeString(), // Apenas a hora

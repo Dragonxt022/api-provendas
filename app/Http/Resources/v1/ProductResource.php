@@ -27,6 +27,7 @@ class ProductResource extends JsonResource
             'stock_quantity' => $this->stock_quantity,
             'min_stock' => $this->min_stock,
             'is_active' => $this->is_active,
+            'empresa_id'=> $this->empresa_id,
             'is_managed' => $this->is_managed,
             'image_path' => $this->image_path,
             'ncm_code' => $this->ncm_code,

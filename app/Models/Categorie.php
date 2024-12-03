@@ -7,20 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categorie extends Model
 {
-    /** @use HasFactory<\Database\Factories\CategoriesFactory> */
     use HasFactory;
 
     protected $fillable = [
         'name',
         'description',
         'image_path',
+        'empresa_id',
         'is_active',
     ];
 
-    // Relacionamento com produtos
-    public function products()
+    /**
+     * Relacionamento: Categoria pertence a uma empresa
+     */
+    public function empresa()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Empresa::class);
     }
-
 }

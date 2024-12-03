@@ -22,6 +22,9 @@ return new class extends Migration
             $table->decimal('cost_price', 10, 2)->nullable(); // Preço de custo do produto (opcional)
             $table->integer('stock_quantity')->default(0); // Quantidade de estoque atual
             $table->integer('min_stock')->default(5); // Quantidade mínima em estoque
+
+            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
+
             $table->boolean('is_active')->default(true); // Indica se o produto está ativo
             $table->boolean('is_managed')->default(false); // Indica se o produto será gerenciado
             $table->string('image_path')->nullable(); // Caminho para a imagem (opcional)

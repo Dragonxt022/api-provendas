@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 255);
+
+            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
+
             $table->enum('role', ['admin', 'gerente', 'usuario'])->default('usuario'); // Define os papéis
             $table->boolean('is_active')->default(true); // Status do usuário
             $table->rememberToken();

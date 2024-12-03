@@ -18,6 +18,8 @@ Route::get('/users', [UserController::class, 'index']);
 Route::get('/empresas', [EmpresaController::class, 'index']);
 
 // Produtos
+// Route::apiResource('/products', ProductController::class);
+
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 

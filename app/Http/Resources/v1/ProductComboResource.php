@@ -15,6 +15,7 @@ class ProductComboResource extends JsonResource
             'component_id' => $this->component_id,
             'quantity' => $this->quantity,
             'combo_price' => number_format($this->combo_price, 2, ',', '.'), // Formatar preço do combo
+            'empresa_id'=> $this->empresa_id,
             'is_active' => $this->is_active,
             'expiration_date' => $this->expiration_date ? Carbon::parse($this->expiration_date)->format('d/m/Y') : null, // Formatar data de expiração
             'created_at_date' => Carbon::parse($this->created_at)->toDateString(), // Apenas a data

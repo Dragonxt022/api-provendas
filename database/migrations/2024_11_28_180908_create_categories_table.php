@@ -12,12 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->id(); // Identificador único da categoria
+            $table->id();
             $table->string('name', 255); // Nome da categoria
-            $table->text('description')->nullable(); // Descrição da categoria (opcional)
-            $table->string('image_path')->nullable(); // Caminho para a imagem da categoria (opcional)
+            $table->text('description')->nullable();
+            $table->string('image_path')->nullable();
+
+            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
+
             $table->boolean('is_active')->default(true); // Indica se a categoria está ativa
-            $table->timestamps(); // Data de criação e atualização
+            $table->timestamps();
         });
 
     }

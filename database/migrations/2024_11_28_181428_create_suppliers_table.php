@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('phone', 20)->nullable(); // Telefone do fornecedor (opcional)
             $table->string('email', 150)->nullable(); // E-mail do fornecedor (opcional)
             $table->text('address')->nullable(); // Endereço completo do fornecedor (opcional)
+
+            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
+
             $table->string('image_path')->nullable(); // Caminho para a imagem ou logo do fornecedor (opcional)
             $table->boolean('is_active')->default(true); // Indica se o fornecedor está ativo
             $table->timestamps(); // Data de criação e atualização

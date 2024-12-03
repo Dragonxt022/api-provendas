@@ -19,6 +19,7 @@ class Product extends Model
         'cost_price',
         'stock_quantity',
         'min_stock',
+        'empresa_id',
         'is_active',
         'is_managed',
         'image_path',
@@ -28,8 +29,13 @@ class Product extends Model
         'expiration_date',
     ];
 
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class);
+    }
+
     // Relacionamento com a categoria
-    public function category()
+    public function categories()
     {
         return $this->belongsTo(Categorie::class);
     }
