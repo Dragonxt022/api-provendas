@@ -17,14 +17,21 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        // $products = Product::withoutGlobalScope(FilterByCompanyScope::class)->get();
-        $query = Product::with(['promotions', 'variations', 'combos']);
+        $user = Auth::user(); // Pega o usuário autenticado
+        $empresaId = $user->empresa_id; // Acessa o empresa_id do usuário autenticado
 
+        $query = Product::with(['promotions', 'variations', 'combos'])
+                        ->where('empresa_id', $empresaId); // Filtro pela empresa do usuário autenticado
+
+        // Se houver um parâmetro de busca, filtra os produtos pelo nome ou SKU
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('sku', 'like', '%' . $request->search . '%');
+            });
         }
 
+        // Paginação dos produtos filtrados
         $products = $query->paginate(50);
 
         return response()->json([
@@ -45,6 +52,7 @@ class ProductController extends Controller
             ],
         ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -70,9 +78,7 @@ class ProductController extends Controller
             'supplier_id' => 'nullable|exists:suppliers,id', // Fornecedor (opcional, mas se informado, precisa existir)
             'expiration_date' => 'nullable|date', // Data de validade opcional
             'is_active' => 'nullable|boolean', // Se o produto está ativo, opcional
-            'is_managed' => 'nullable|boolean', // Se o produto será gerenciado, opcional
-            'empresa_id' => 'required|exists:empresas,id', // Empresa (obrigatória, baseada no usuário autenticado)
-            // Variações (se habilitado)
+            'is_managed' => 'nullable|boolean', // Se o produto será gerenciado, opcional // Variações (se habilitado)
             'enable_variations' => 'nullable|boolean',
             'variations' => 'nullable|array',
             'variations.*.name' => 'nullable|string|max:255',
@@ -104,15 +110,19 @@ class ProductController extends Controller
 
         // Criar variações se ativado
         if ($request->enable_variations && $request->has('variations')) {
+            $variationsData = [];
             foreach ($request->variations as $variation) {
-                $product->variations()->create([
+                $variationsData[] = [
+                    'product_id' => $product->id,
                     'name' => $variation['name'],
                     'sku' => $variation['sku'],
                     'price' => $variation['price'],
                     'stock_quantity' => $variation['stock_quantity'],
                     'is_active' => $variation['is_active'] ?? true,
-                ]);
+                ];
             }
+            // Inserir todas as variações de uma vez (evita múltiplas queries)
+            Product_variation::insert($variationsData);
         }
 
         // Resposta de sucesso

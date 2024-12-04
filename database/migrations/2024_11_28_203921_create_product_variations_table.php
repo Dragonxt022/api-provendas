@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); // ID único da variação
             $table->foreignId('product_id')->constrained()->onDelete('cascade'); // Produto principal
             $table->string('name', 255); // Nome da variação (ex.: "Tamanho: M, Cor: Azul")
-            $table->string('sku', 50)->unique(); // SKU da variação
+            $table->string('sku', 50)->unique()->nullable(); // SKU da variação
             $table->decimal('price', 10, 2); // Preço da variação
             $table->integer('stock_quantity')->default(0); // Estoque da variação
             $table->boolean('is_active')->default(true); // Indica se a variação está ativa

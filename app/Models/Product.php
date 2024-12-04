@@ -30,12 +30,7 @@ class Product extends Model
     ];
 
     // Método booted() para aplicar o escopo global
-    // Aplica o escopo global
-    protected static function booted()
-    {
-        static::addGlobalScope(new FilterByCompanyScope);
 
-    }
 
     public function empresa()
     {
